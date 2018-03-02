@@ -5,7 +5,7 @@ using musicMash.Services;
 
 namespace musicMash.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : MusicBrainzResult
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly IHttpHandler _httpClient;
 
