@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="RepositoryTests\" />
+    <Folder Include="ServiceTests\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\musicMash\musicMash.csproj" />
