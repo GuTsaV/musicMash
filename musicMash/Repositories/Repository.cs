@@ -1,13 +1,12 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using musicMash.Models;
 using musicMash.Services;
 
 namespace musicMash.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly IHttpHandler _httpClient;
+        readonly IHttpHandler _httpClient;
 
         public Repository(IHttpHandler httpHandler)
         {
