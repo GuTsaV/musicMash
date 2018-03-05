@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using musicMash.Exceptions;
 using musicMash.Models;
 using musicMash.Repositories;
 
@@ -15,6 +16,7 @@ namespace musicMash.Services
         readonly IRepository<WikipediaResult> _wikipediaRepository;
         // Take everything from the end of the string that is not a '/'
         const string PageNamePattern = @"[^\/]*$";
+        static Regex Regexp = new Regex(PageNamePattern);
 
         public MashupService(
             IRepository<CoverArtResult> coverArtRepository,
@@ -30,9 +32,8 @@ namespace musicMash.Services
         public async Task<MashupArtist> GetMashup(string artistId)
         {
             // Fetch info from MusizBrainz first
-            var hej = Configuration.MusicBrainzArtistUrl(artistId);
-            Console.WriteLine(hej);
-            var musicBrainzResult = await GetArtist(hej);
+            var musicBrainzResult = await GetArtist(Configuration.MusicBrainzArtistUrl(artistId));
+
             var albums = musicBrainzResult.Albums.Select(musicBrainzAlbum => new MashupAlbum(musicBrainzAlbum.Id, musicBrainzAlbum.Title)).ToList();
 
             // Set up other tasks
@@ -42,8 +43,8 @@ namespace musicMash.Services
             // Wikipedia and Cover Art Archive are fetched concurrently
             // Wait for Wikipedia and collect result
             var wikipediaResult = await wikipediaTask;
-            var firstKey = wikipediaResult.Query.Pages.First().Key;
-            var description = wikipediaResult.Query.Pages[firstKey].Description;
+            var firstKey = wikipediaResult.Query?.Pages?.First().Key;
+            var description = wikipediaResult.Query?.Pages[firstKey]?.Description;
 
             // Wait for Cover Art Archive and collect results
             await Task.WhenAll(coverTasks);
@@ -57,14 +58,14 @@ namespace musicMash.Services
             var musicBrainzResult = await _musicBrainzRepository.Get(url);
             if (musicBrainzResult == null)
             {
-                throw new InvalidOperationException("No artist found");
+                throw new ArtistDoesNotExistException();
             }
             return musicBrainzResult;
         }
 
         Task<WikipediaResult> GetWikipedia(MusicBrainzResult musicBrainzResult)
         {
-            var wikipediaRelation = musicBrainzResult.Relations.FirstOrDefault(r => r.Type == "wikipedia");
+            var wikipediaRelation = musicBrainzResult.Relations?.FirstOrDefault(r => r.Type == "wikipedia");
             if (wikipediaRelation == null)
             {
                 throw new InvalidOperationException("Missing Wikipedia relation");
@@ -79,7 +80,7 @@ namespace musicMash.Services
             var coverArtAlbums = new List<CoverArtResult>();
             coverTasks.ForEach(task =>
             {
-                if (task.IsCompleted && task.Result?.Images != null)
+                if (task.Result?.Images != null)
                 {
                     coverArtAlbums.Add(task.Result);
                 }
@@ -102,9 +103,8 @@ namespace musicMash.Services
 
         static string GetWikipediaPageName(string wikipediaUrl)
         {
-            var regexp = new Regex(PageNamePattern);
-            var matches = regexp.Match(wikipediaUrl);
-            return string.IsNullOrWhiteSpace(matches.Value) ? null : matches.Value;
+            var matches = Regexp.Match(wikipediaUrl);
+            return matches.Success ? matches.Value : null;
         }
     }
 }
