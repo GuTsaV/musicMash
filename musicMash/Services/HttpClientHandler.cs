@@ -5,7 +5,7 @@ namespace musicMash.Services
 {
     public class HttpClientHandler : IHttpHandler
     {
-        private HttpClient _client = new HttpClient();
+        HttpClient _client = new HttpClient();
 
         public HttpClientHandler(){
             // Headers are needed to get the correct type of result, that is a JSON result

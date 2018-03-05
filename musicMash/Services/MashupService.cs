@@ -10,11 +10,11 @@ namespace musicMash.Services
 {
     public class MashupService : IMashupService
     {
-        private readonly IRepository<CoverArtResult> _coverArtRepository;
-        private readonly IRepository<MusicBrainzResult> _musicBrainzRepository;
-        private readonly IRepository<WikipediaResult> _wikipediaRepository;
+        readonly IRepository<CoverArtResult> _coverArtRepository;
+        readonly IRepository<MusicBrainzResult> _musicBrainzRepository;
+        readonly IRepository<WikipediaResult> _wikipediaRepository;
         // Take everything from the end of the string that is not a '/'
-        private const string PageNamePattern = @"[^\/]*$";
+        const string PageNamePattern = @"[^\/]*$";
 
         public MashupService(
             IRepository<CoverArtResult> coverArtRepository,
@@ -52,7 +52,7 @@ namespace musicMash.Services
             return new MashupArtist(artistId, musicBrainzResult.Name, description, albums);
         }
 
-        private async Task<MusicBrainzResult> GetArtist(string url)
+        async Task<MusicBrainzResult> GetArtist(string url)
         {
             var musicBrainzResult = await _musicBrainzRepository.Get(url);
             if (musicBrainzResult == null)
@@ -62,7 +62,7 @@ namespace musicMash.Services
             return musicBrainzResult;
         }
 
-        private Task<WikipediaResult> GetWikipedia(MusicBrainzResult musicBrainzResult)
+        Task<WikipediaResult> GetWikipedia(MusicBrainzResult musicBrainzResult)
         {
             var wikipediaRelation = musicBrainzResult.Relations.FirstOrDefault(r => r.Type == "wikipedia");
             if (wikipediaRelation == null)
@@ -74,7 +74,7 @@ namespace musicMash.Services
             return _wikipediaRepository.Get(wikipediaUrl);
         }
 
-        private List<MashupAlbum> HandleAlbums(List<Task<CoverArtResult>> coverTasks, List<MashupAlbum> albums)
+        List<MashupAlbum> HandleAlbums(List<Task<CoverArtResult>> coverTasks, List<MashupAlbum> albums)
         {
             var coverArtAlbums = new List<CoverArtResult>();
             coverTasks.ForEach(task =>
@@ -100,7 +100,7 @@ namespace musicMash.Services
             return albums;
         }
 
-        private static string GetWikipediaPageName(string wikipediaUrl)
+        static string GetWikipediaPageName(string wikipediaUrl)
         {
             var regexp = new Regex(PageNamePattern);
             var matches = regexp.Match(wikipediaUrl);

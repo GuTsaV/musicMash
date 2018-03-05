@@ -13,8 +13,8 @@
         public static string WikipediaPageUrl(string pageName) => $"{WikipediaUrl}?action=query&format=json&prop=extracts&exintro=true&redirects=true&titles={pageName}";
         public static string CoverArtAlbumUrl(string albumId) => $"{CoverArtUrl}/{albumId}";
 
-        private static readonly string MusicBrainzUrl;
-        private static readonly string WikipediaUrl;
-        private static readonly string CoverArtUrl;
+        static readonly string MusicBrainzUrl;
+        static readonly string WikipediaUrl;
+        static readonly string CoverArtUrl;
     }
 }

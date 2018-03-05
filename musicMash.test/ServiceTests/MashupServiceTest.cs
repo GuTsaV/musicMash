@@ -11,8 +11,8 @@ namespace musicMash.test.ServiceTests
 {
     public class MashupServiceTest
     {
-        private IMashupService _service;
-        private const string ArtistId = "5b11f4ce-a62d-471e-81fc-a69a8278c7da";
+        IMashupService _service;
+        const string ArtistId = "5b11f4ce-a62d-471e-81fc-a69a8278c7da";
 
         public MashupServiceTest()
         {

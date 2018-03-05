@@ -12,7 +12,7 @@ namespace musicMash.test.RepositoryTests
 {
     public class WikipediaRepositoryTest
     {
-        private Repository<WikipediaResult> _repository;
+        Repository<WikipediaResult> _repository;
 
         public WikipediaRepositoryTest()
         {

@@ -10,12 +10,12 @@ namespace musicMashup.integrationTest.IntegrationTests
 {
     public class IntegrationTest
     {
-        private MashupController _controller;
-        private IHttpHandler _httpHandler;
-        private IMashupService _service;
-        private IRepository<CoverArtResult> _coverArtRepository;
-        private IRepository<MusicBrainzResult> _musicBrainzRepository;
-        private IRepository<WikipediaResult> _wikipediaRepository;
+        MashupController _controller;
+        IHttpHandler _httpHandler;
+        IMashupService _service;
+        IRepository<CoverArtResult> _coverArtRepository;
+        IRepository<MusicBrainzResult> _musicBrainzRepository;
+        IRepository<WikipediaResult> _wikipediaRepository;
 
         public IntegrationTest()
         {

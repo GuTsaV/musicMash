@@ -12,7 +12,7 @@ namespace musicMash.test.ControllerTests
 {
     public class MashupControllerTest
     {
-        private MashupController _controller;
+        MashupController _controller;
 
         public MashupControllerTest()
         {

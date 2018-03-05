@@ -12,7 +12,7 @@ namespace musicMash.test.RepositoryTests
 {
     public class CoverArtRepositoryTest
     {
-        private Repository<CoverArtResult> _repository;
+        Repository<CoverArtResult> _repository;
 
         public CoverArtRepositoryTest()
         {

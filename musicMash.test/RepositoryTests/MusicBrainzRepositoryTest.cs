@@ -12,7 +12,7 @@ namespace musicMash.test.RepositoryTests
 {
     public class MusicBrainsRepositoryTest
     {
-        private Repository<MusicBrainzResult> _repository;
+        Repository<MusicBrainzResult> _repository;
 
         public MusicBrainsRepositoryTest()
         {
