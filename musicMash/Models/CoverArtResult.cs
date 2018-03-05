@@ -4,16 +4,17 @@ using System.Runtime.Serialization;
 namespace musicMash.Models
 {
     [DataContract]
-    public class CoverArtResult
+    public class CoverArtResult : IResult
     {
-        public CoverArtResult(List<CoverArtImage> images, string albumId)
+        public CoverArtResult(List<CoverArtImage> images, string url)
         {
             Images = images;
-            AlbumId = albumId;
+            Url = url;
         }
 
         [DataMember(Name = "images")]
         public List<CoverArtImage> Images { get; set; }
-        public string AlbumId { get; set; }
+
+        public string Url { get; set; }
     }
 }

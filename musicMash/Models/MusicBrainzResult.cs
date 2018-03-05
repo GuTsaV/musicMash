@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace musicMash.Models
 {
     [DataContract]
-    public class MusicBrainzResult
+    public class MusicBrainzResult : IResult
     {
         public MusicBrainzResult(string id, string name, List<MusicBrainzAlbum> albums, List<MusicBrainzRelation> relations)
         {
@@ -25,5 +25,7 @@ namespace musicMash.Models
 
         [DataMember(Name = "relations")]
         public List<MusicBrainzRelation> Relations { get; set; }
+
+        public string Url { get; set; }
     }
 }

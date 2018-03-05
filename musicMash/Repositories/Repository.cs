@@ -1,10 +1,11 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using musicMash.Models;
 using musicMash.Services;
 
 namespace musicMash.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : IResult
     {
         readonly IHttpHandler _httpClient;
 
@@ -22,8 +23,9 @@ namespace musicMash.Repositories
                 {
                     return default(T);
                 }
-                var result = response.Content.ReadAsAsync<T>();
-                return await result;
+                var result = await response.Content.ReadAsAsync<T>();
+                result.Url = url;
+                return result;
             }
             catch (HttpRequestException)
             {

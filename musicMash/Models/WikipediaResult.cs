@@ -3,7 +3,7 @@
 namespace musicMash.Models
 {
     [DataContract]
-    public class WikipediaResult
+    public class WikipediaResult : IResult
     {
         public WikipediaResult(WikipediaQuery query)
         {
@@ -12,5 +12,7 @@ namespace musicMash.Models
 
         [DataMember(Name = "query")]
         public WikipediaQuery Query { get; set; }
+
+        public string Url { get; set; }
     }
 }

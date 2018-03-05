@@ -30,12 +30,14 @@ namespace musicMash.Services
         public async Task<MashupArtist> GetMashup(string artistId)
         {
             // Fetch info from MusizBrainz first
-            var musicBrainzResult = await GetArtist(artistId);
+            var hej = Configuration.MusicBrainzArtistUrl(artistId);
+            Console.WriteLine(hej);
+            var musicBrainzResult = await GetArtist(hej);
             var albums = musicBrainzResult.Albums.Select(musicBrainzAlbum => new MashupAlbum(musicBrainzAlbum.Id, musicBrainzAlbum.Title)).ToList();
 
             // Set up other tasks
             var wikipediaTask = GetWikipedia(musicBrainzResult);
-            var coverTasks = albums.Select(album => _coverArtRepository.Get(album.Id)).ToList();
+            var coverTasks = albums.Select(album => _coverArtRepository.Get(Configuration.CoverArtAlbumUrl(album.Id))).ToList();
 
             // Wikipedia and Cover Art Archive are fetched concurrently
             // Wait for Wikipedia and collect result
@@ -50,9 +52,9 @@ namespace musicMash.Services
             return new MashupArtist(artistId, musicBrainzResult.Name, description, albums);
         }
 
-        private async Task<MusicBrainzResult> GetArtist(string artistId)
+        private async Task<MusicBrainzResult> GetArtist(string url)
         {
-            var musicBrainzResult = await _musicBrainzRepository.Get(artistId);
+            var musicBrainzResult = await _musicBrainzRepository.Get(url);
             if (musicBrainzResult == null)
             {
                 throw new InvalidOperationException("No artist found");
@@ -68,7 +70,8 @@ namespace musicMash.Services
                 throw new InvalidOperationException("Missing Wikipedia relation");
             }
             var wikipediaPageName = GetWikipediaPageName(wikipediaRelation.Url.Resource);
-            return _wikipediaRepository.Get(wikipediaPageName);
+            var wikipediaUrl = Configuration.WikipediaPageUrl(wikipediaPageName);
+            return _wikipediaRepository.Get(wikipediaUrl);
         }
 
         private List<MashupAlbum> HandleAlbums(List<Task<CoverArtResult>> coverTasks, List<MashupAlbum> albums)
@@ -84,7 +87,7 @@ namespace musicMash.Services
 
             albums.ForEach(album =>
             {
-                var cover = coverArtAlbums.FirstOrDefault(x => x.AlbumId == album.Id);
+                var cover = coverArtAlbums.FirstOrDefault(x => x.Url.Contains(album.Id));
                 if (cover?.Images == null)
                 {
                     album.Image = "Not found";
